@@ -1,0 +1,18 @@
+{
+  "name": "my-money-backend",
+  "version": "1.0.0",
+  "main": "src/loader.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "dependencies": {
+    "express": "4.14.0",
+    "mongoose": "4.13.17",
+    "body-parser": "1.15.2",
+    "lodash": "^4.17.11",
+    "mongoose-paginate": "5.0.3",
+    "express-query-int": "1.0.1",
+    "node-restful": "0.2.5",
+    "pm2": "2.1.5"
+  }
+}
