@@ -15,8 +15,8 @@ module.exports = {
         extensions: ['', '.js', '.jsx'],
         alias: {
             modules: __dirname + '/node_modules',
-            jquery: 'modules/admin-lite/plugins/jQuery/jquery-2.2.3.min.js',
-            bootstrap: 'modules/admin-lite/bootstrap/js/bootstrap.js',
+            jquery: 'modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js',
+            bootstrap: 'modules/admin-lte/bootstrap/js/bootstrap.js'
         }
     },
     plugins: [
@@ -29,12 +29,12 @@ module.exports = {
     ],
     module: {
         loaders: [{
-            test: /js[x]?$/,
+            test: /.js[x]?$/,
             loader: 'babel-loader',
             exclude: /node_modules/,
             query: {
-                preset: ['es-2015', 'react'],
-                plugin: ['transform-object-rest-spread']
+                presets: ['es2015', 'react'],
+                plugins: ['transform-object-rest-spread']
             }
         }, {
             test: /\.css$/,
