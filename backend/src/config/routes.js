@@ -1,11 +1,30 @@
-const express = require('express')
+const express = require('express');
+const auth = require('./auth');
 
 module.exports = function (server) {
-    //Rota base
-    const router = express.Router()
-    server.use('/api', router)
 
-    //Rota de ciclo de pagamento
-    const BillingCycle = require('../api/billingCycle/billingCycleService')
-    BillingCycle.register(router, '/billingCycles')
-}
+    /**
+     * @description Rotas privadas, protegidas por token
+     * @type {Router|router}
+     */
+    const protectedApi = express.Router();
+    server.use('/api', protectedApi);
+
+    protectedApi.use(auth);
+
+    const BillingCycle = require('../api/billingCycle/billingCycleService');
+    BillingCycle.register(protectedApi, '/billingCycles');
+
+
+    /**
+     * @description Rotas publicas
+     * @type {Router|router}
+     */
+    const openApi = express.Router();
+    server.use('/oapi', openApi);
+
+    const AuthService = require('../api/user/authService');
+    openApi.post('/login', AuthService.login);
+    openApi.post('/signup', AuthService.signup);
+    openApi.post('/validateToken', AuthService.validateToken)
+};
