@@ -2,7 +2,7 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('./user');
-const env = require('../../../.env');
+const env = require('../../../env');
 
 const emailRegex = /\S+@\S+\.\S+/;
 const passwordRegex = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})/;
@@ -21,8 +21,9 @@ const login = (req, res, next) => {
         if (err) {
             return sendErrosFromDB(res, err);
         } else if (user && bcrypt.compareSync(password, user.password)) {
-            const token = jwt.sign(user, env.authSecret, {
-                expiresIn: "1 day"
+            console.log(user)
+            const token = jwt.sign(user.toJSON(), env.authSecret, {
+                expiresIn: 604800
             });
             const {name, email} = user;
             res.json({name, email, token});
@@ -44,7 +45,7 @@ const signup = (req, res, next) => {
     const name = req.body.name || '';
     const email = req.body.email || '';
     const password = req.body.password || '';
-    const confirmPassword = req.body.confirmPassword || '';
+    let confirmPassword = req.body.confirmPassword || '';
 
     if (!email.match(emailRegex)) {
         return res.status(400).send({errors: ['O e-mail informado está inválido']})
@@ -60,9 +61,6 @@ const signup = (req, res, next) => {
 
     const salt = bcrypt.genSaltSync();
     const passwordHash = bcrypt.hashSync(password, salt);
-    if (!bcrypt.compareSync(confirmPassword, passwordHash)) {
-        return res.status(400).send({errors: ['Senhas não conferem']})
-    }
 
     User.findOne({email}, (err, user) => {
         if (err)
